@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const progressSchema = new mongoose.Schema({
     title: {
         type: String,
-        requore: true
+        require: true
     },
     description: {
         type: String,
