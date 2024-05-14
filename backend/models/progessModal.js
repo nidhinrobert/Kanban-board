@@ -14,6 +14,10 @@ const progressSchema = new mongoose.Schema({
          enum: ['todo', 'in-progress', 'done'],
           default: 'todo' 
     },
+    projectId: {
+        type: String,
+        require: true
+    },
     createdAt: {
         type: Date,
         default: Date.now 

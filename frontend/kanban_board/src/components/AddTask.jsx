@@ -2,30 +2,32 @@
 import React, { useState } from 'react';
 import './Add.css'; 
 import { useDispatch } from 'react-redux';
-import { addTask, getDone, getInProgress, getTodo } from '../redux/slice';
+import { addTask, getDone, getInProgress, getTodo } from '../redux/taskSlice';
 
-const AddTask = ({ toggleModal }) => {
+const AddTask = ({ toggleModal,projectId }) => {
 
 const dispatch = useDispatch();
   const [title,setTaskTitle] = useState("");
   const [dueDate,setDueDate] = useState("");
   const [description,setTaskDescription] = useState("");
   const [status,setStatus] = useState("todo");
-
+  
 const createTask = async(event)=>{
   event.preventDefault();
     const newTask = {
       title,
       description,
+      projectId,
       status,
       dueDate
     }
+    
     try{
       await dispatch(addTask(newTask));
       toggleModal();
-     dispatch(getTodo());
-     dispatch((getInProgress()))
-     dispatch((getDone()))
+      dispatch(getTodo(projectId));
+      dispatch(getInProgress(projectId));
+      dispatch(getDone(projectId));
       
 
     }catch(error){

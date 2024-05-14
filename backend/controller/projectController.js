@@ -14,8 +14,8 @@ const getAllProjects = async (req, res) => {
 };
 const createProject= async (req,res) => {
     try{
-        const {heading,description}= req.body;
-        const newProject = new Project({heading,description})
+        const {heading,description,dueDate}= req.body;
+        const newProject = new Project({heading,description,dueDate})
         await newProject.save();
         res.status(201).json(newProject);
     }catch(err){
@@ -27,13 +27,13 @@ const createProject= async (req,res) => {
 const updateProject = async (req, res) => {
     try {
         const { id } = req.params;
-        const { heading, description } = req.body;
+        const { heading, description,dueDate } = req.body;
         
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: 'Invalid ID' });
         }
         
-        const update = await Project.findByIdAndUpdate(id, { heading, description });
+        const update = await Project.findByIdAndUpdate(id, { heading, description,dueDate });
         res.json(update);
         if (!update) {
             return res.status(404).json({ message: 'Project not found' });

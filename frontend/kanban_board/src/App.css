@@ -12,7 +12,7 @@ html {
   font-family: Arial, sans-serif;
 }
 
-/* Header styles */
+
 header {
   display: flex;
   justify-content: space-between;
@@ -21,19 +21,20 @@ header {
   color: white;
 }
 
-/* Kanban board styles */
+
 .kanban-board {
  
   display: flex;
   justify-content: space-around;
   padding: 20px;
+  
 }
 .container{
   display: flex;
 }
 
 .column {
-  width: 436px;
+  width: 360px;
   background-color: #f4f4f4;
   margin: 0 10px;
   padding: 10px;
@@ -77,6 +78,18 @@ header {
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
 }
+.editmodal{
+display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+
+}
 
 .modal-content {
   background-color: #fefefe;
@@ -85,6 +98,14 @@ header {
   border: 1px solid #888;
   width: 50%;
 }
+.editmodal-content{
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+}
+
 
 .close-button {
   color: #aaa;
@@ -99,7 +120,19 @@ header {
   text-decoration: none;
   cursor: pointer;
 }
+.close-buttonn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
 
+.close-buttonn:hover,
+.close-buttonn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 .modal {
   display: none;
@@ -292,3 +325,18 @@ header .header-left {
   color: #d21818;
 }
 
+.main{
+  display: flex;
+  
+}
+.btna{
+  padding: 7px 20px;
+    background-color: #7f7fff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+.btncont{
+  display: flex;
+  gap: 4px;
+}

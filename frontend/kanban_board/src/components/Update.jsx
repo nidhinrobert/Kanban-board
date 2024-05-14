@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { editTask, getDone, getInProgress, getProgressbyId, getTodo } from '../redux/slice';
+import { editTask, getDone, getInProgress, getProgressbyId, getTodo } from '../redux/taskSlice';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 const Update = ({ toggleEditModal, taskId, task: initialTask }) => {
     const dispatch = useDispatch();
-    const taskFromStore = useSelector((state) => state.progress.items.find((item) => item._id === taskId));
-    const taskProgressFromStore = useSelector((state) => state.progress.inProgress.find((item) => item._id === taskId));
-    const taskDoneFromStore = useSelector((state) => state.progress.done.find((item) => item._id === taskId));
-
+    const taskFromStore = useSelector((state) => state.progress.items.taskItems.find((item) => item._id === taskId));
+    const taskProgressFromStore = useSelector((state) => state.progress.inProgress.taskItems.find((item) => item._id === taskId));
+    const taskDoneFromStore = useSelector((state) => state.progress.done.taskItems.find((item) => item._id === taskId));
+    const {projectId} = useLocation().state;
 
     const [title, setTaskTitle] = useState('');
     const [description, setTaskDescription] = useState('');
@@ -53,9 +54,9 @@ const Update = ({ toggleEditModal, taskId, task: initialTask }) => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         await dispatch(editTask({ id: taskId, title, description, dueDate }));
-        await dispatch(getTodo())
-        await dispatch(getInProgress())
-        await dispatch(getDone())
+        await dispatch(getTodo(projectId))
+        await dispatch(getInProgress(projectId))
+        await dispatch(getDone(projectId))
         toggleEditModal();
 
     };

@@ -1,10 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import progressSlice from './slice'
+import progressSlice from './taskSlice'
+
+import projectSlice from "./projectSlice";
+import userSlice from "./userSlice";
 
 const store = configureStore({
     reducer:{
-        progress:progressSlice
+        progress:progressSlice,
+        project:projectSlice,
+        user:userSlice
     }
 })
 export default store

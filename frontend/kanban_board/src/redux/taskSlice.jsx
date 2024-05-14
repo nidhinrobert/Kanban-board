@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 export const getProgressbyId = createAsyncThunk('task/getProgressbyId', async (id) => {
   try {
@@ -12,9 +13,9 @@ export const getProgressbyId = createAsyncThunk('task/getProgressbyId', async (i
     throw new Error("failed to retrieve data")
   }
 })
-export const addTask = createAsyncThunk('items/addTask', async ({ title, description, status, dueDate }) => {
+export const addTask = createAsyncThunk('items/addTask', async ({ title, description, status, dueDate,projectId }) => {
   try {
-    const response = await axios.post('http://localhost:8001/api/kanban/', { title, description, status, dueDate });
+    const response = await axios.post('http://localhost:8001/api/kanban/', { title, description, status,projectId, dueDate });
 
     if (!response.data) {
       throw new Error('failed to add');
@@ -24,9 +25,9 @@ export const addTask = createAsyncThunk('items/addTask', async ({ title, descrip
     throw error;
   }
 })
-export const getTodo = createAsyncThunk('getTodo', async () => {
+export const getTodo = createAsyncThunk('getTodo', async (projectId) => {
   try {
-    const response = await axios.get(`http://localhost:8001/api/kanban/user/todo`);
+    const response = await axios.get(`http://localhost:8001/api/kanban/user/todo?projectId=${projectId}`);
     if (!response.data) {
       throw new Error('todo task not found')
     }
@@ -39,9 +40,9 @@ export const getTodo = createAsyncThunk('getTodo', async () => {
 
   }
 });
-export const getInProgress = createAsyncThunk('getInProgress', async () => {
+export const getInProgress = createAsyncThunk('getInProgress', async (projectId) => {
   try {
-    const response = await axios.get(`http://localhost:8001/api/kanban/user/inProgress`);
+    const response = await axios.get(`http://localhost:8001/api/kanban/user/inProgress?projectId=${projectId}`);
     if (!response.data) {
       throw new Error('In progress task not found')
     }
@@ -54,9 +55,9 @@ export const getInProgress = createAsyncThunk('getInProgress', async () => {
 
   }
 });
-export const getDone = createAsyncThunk('getDone', async () => {
+export const getDone = createAsyncThunk('getDone', async (projectId) => {
   try {
-    const response = await axios.get(`http://localhost:8001/api/kanban/user/done`);
+    const response = await axios.get(`http://localhost:8001/api/kanban/user/done?projectId=${projectId}`);
     if (!response.data) {
       throw new Error('In done task not found')
     }
@@ -89,12 +90,13 @@ export const editTask = createAsyncThunk('tasks/editTask', async ({ id, title, d
 }
 );
 
-export const deleteTask = createAsyncThunk('task/deleteTask', async (id, { dispatch }) => {
+export const deleteTask = createAsyncThunk('task/deleteTask', async (id, { dispatch,projectId }) => {
   try {
     const response = await axios.delete(`http://localhost:8001/api/kanban/${id}`);
-    dispatch(getTodo());       
-    dispatch(getInProgress()); 
-    dispatch(getDone());   
+    const projectId = useLocation().state.projectId
+    dispatch(getTodo(projectId));       
+    dispatch(getInProgress(projectId)); 
+    dispatch(getDone(projectId));   
     return response.data;
   } catch (error) {
     throw new Error('Failed to delete task');

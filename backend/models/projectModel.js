@@ -12,6 +12,9 @@ const projectSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now 
+    },
+    dueDate: {
+        type: Date
     }
 })
 projectSchema.pre('save', function(next) {
