@@ -2,16 +2,45 @@ const Project = require ('../models/projectModel')
 const mongoose = require('mongoose');
 
 const getAllProjects = async (req, res) => {
-    try {
-      
-        const allProjects = await Project.find();
+    const currentPage = req.query.currentPage ? parseInt(req.query.currentPage) : 1;
+    const itemsPerPage = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : 10;
 
-        res.json(allProjects);
+    try {
+        const matchStage = {};
+
+        const aggregationPipeline = [
+            { $match: matchStage },
+            // { $sort: { createdAt: -1 } },
+            {
+                $facet: {
+                    Projects: [
+                        { $project: { _id: 1, heading: 1, description: 1, createdAt: 1, dueDate: 1 } },
+                        { $skip: Math.max(0, (currentPage - 1) * itemsPerPage) },
+                        { $limit: itemsPerPage },
+                    ],
+                    totalCount: [
+                        { $count: 'count' }
+                    ],
+                }
+            },
+            {
+                $project: {
+                    Projects: 1,
+                    totalCount: { $ifNull: [{ $arrayElemAt: ['$totalCount.count', 0] }, 0] },
+                }
+            }
+        ];
+
+        const result = await Project.aggregate(aggregationPipeline);
+        const { Projects, totalCount } = result[0];
+        res.status(200).json({ Projects, totalCount });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server Error' });
     }
 };
+
 const createProject= async (req,res) => {
     try{
         const {heading,description,dueDate}= req.body;

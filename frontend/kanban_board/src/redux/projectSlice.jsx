@@ -3,9 +3,9 @@ import axios from "axios";
 
 
 
-export const getProjects = createAsyncThunk('project/getProject', async () => {
+export const getProjects = createAsyncThunk('project/getProject', async ({ currentPage, itemsPerPage }) => {
     try {
-        const response = await axios.get(`http://localhost:8001/api/kanban/project/all`)
+        const response = await axios.get(`http://localhost:8001/api/kanban/project/all?currentPage=${currentPage}&itemsPerPage=${itemsPerPage}`)
         if (!response.data) {
             throw new Error('projects not found')
         }
@@ -53,13 +53,13 @@ export const getProjectbyId = createAsyncThunk('task/getProjectbyId', async (id)
 
 export const deleteProject = createAsyncThunk('task/deleteTask', async (id, { dispatch }) => {
     try {
-      const response = await axios.delete(`http://localhost:8001/api/kanban/project/${id}`);  
-      dispatch(getProjects());
-      return response.data;
+        const response = await axios.delete(`http://localhost:8001/api/kanban/project/${id}`);
+        dispatch(getProjects());
+        return response.data;
     } catch (error) {
-      throw new Error('Failed to delete task');
+        throw new Error('Failed to delete task');
     }
-  });
+});
 
 
 
@@ -71,8 +71,20 @@ const projectSlice = createSlice({
         project: null,
         status: 'idle',
         error: null,
+        currentPage: 1,
+        itemsPerPage: 3,
+        projectCount: 0,
     },
     reducers: {
+
+        setCurrentPage: (state, action) => {
+            state.currentPage = action.payload;
+            console.log("state",state.currentPage);
+        },
+        setItemsPerPage: (state,action) => {
+            state.itemsPerPage = action.payload;
+        },
+       
 
     },
     extraReducers: (builder) => {
@@ -81,6 +93,7 @@ const projectSlice = createSlice({
             .addCase(getProjects.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.projects = action.payload;
+                state.projectCount = action.payload.totalCount;
             })
             .addCase(getProjects.rejected, (state, action) => {
                 state.status = 'failed';
@@ -118,15 +131,17 @@ const projectSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(deleteProject.fulfilled, (state, action) => {
-                state.status = "succeeded"; 
+                state.status = "succeeded";
                 state.projects = state.projects.filter(project => project._id !== action.payload);
             })
             .addCase(deleteProject.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
-            
+
     }
 })
+
+export const {setCurrentPage,setItemsPerPage} = projectSlice.actions;
 
 export default projectSlice.reducer;

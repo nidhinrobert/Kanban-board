@@ -65,3 +65,12 @@ table {
   .project {
     overflow-x: auto;
   }
+
+  .MuiPagination-ul{
+    justify-content:center;
+    margin-top:10px
+  }
+
+  table{
+    margin-bottom: 15px;
+  }

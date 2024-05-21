@@ -8,13 +8,13 @@ export const getUser = createAsyncThunk('getUser', async (projectId) => {
     try {
         const response = await axios.get(`http://localhost:8001/api/kanban/project/user/project?projectId=${projectId}`);
         if (!response.data) {
-            throw new Error('todo task not found')
+            throw new Error(' project User not found')
         }
         console.log(response.data);
         return response.data;
 
     } catch (error) {
-        console.log(error, "failed to retrieve tasks");
+        console.log(error, "failed to retrieve User");
         throw error;
 
     }
@@ -65,11 +65,50 @@ export const deleteUser = createAsyncThunk('task/deleteUser', async (id,{dispatc
     }
 });
 
+export const createAssign = createAsyncThunk('task/assign', async ({ assignName, taskId }) => {
+    try {
+        const response = await axios.post(`http://localhost:8001/api/kanban/task/assign/`, { assignName, taskId })
+
+        if (!response.data) {
+            throw new Error('failed to assign');
+        }
+        return response.data
+    } catch (error) {
+        throw error;
+    }
+})
+export const getAssign = createAsyncThunk('task/get/Assign', async (taskId) => {
+    try {
+        const response = await axios.get(`http://localhost:8001/api/kanban/task/assign/assign?taskId=${taskId}`);
+        if (!response.data) {
+            throw new Error('assign  not found')
+        }
+        console.log(response.data);
+        return response.data;
+
+    } catch (error) {
+        console.log(error, "failed to retrieve Assign");
+        throw error;
+
+    }
+});
+export const deleteAssign = createAsyncThunk('task/deleteAssign', async (id) => {
+    try {
+        const response = await axios.delete(`http://localhost:8001/api/kanban/task/assign/${id}`);
+        return response.data;
+
+    } catch (error) {
+        throw new Error('Failed to delete task');
+    }
+});
+
+
 
 const userSlice = createSlice({
     name: 'user',
     initialState: {
         users: [],
+        assignTask:[],
         user: null,
         status: 'idle',
         error: null,
@@ -87,6 +126,14 @@ const userSlice = createSlice({
             .addCase(getUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(getAssign.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.assignTask = action.payload; 
+            })
+            .addCase(getAssign.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
             })
             .addCase(addUser.fulfilled, (state, action) => {
                 state.status = 'succeeded';
@@ -123,6 +170,18 @@ const userSlice = createSlice({
             .addCase(deleteUser.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
+            })
+            .addCase(createAssign.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.assignTask = action.payload;
+            })
+            .addCase(createAssign.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(deleteAssign.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.assignTask = state.assignTask.filter(assign => assign._id !== action.payload);
             })
 
     }

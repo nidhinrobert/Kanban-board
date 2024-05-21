@@ -10,6 +10,7 @@ import Sidebar from './Sidebar';
 import DeleteUser from './DeleteUser';
 import './Add.css'
 
+
 const User = () => {
 
 
@@ -23,7 +24,6 @@ const User = () => {
     const [selectedUserId, setSelectedUserId] = useState(null);
 
 
-    console.log(users, "Users");
     useEffect(() => {
         dispatch(getUser(projectId));
     }, [dispatch]);
@@ -105,6 +105,11 @@ const User = () => {
                                     ))}
                             </tbody>
                         </table>
+                        
+
+
+    
+
                     </div>
                 </div>
             </div>

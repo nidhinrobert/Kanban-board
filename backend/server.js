@@ -9,6 +9,7 @@ app.use (cors())
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api/kanban",require("./router/progressRouter"));
+app.use("/api/kanban/task/assign",require("./router/assignRouter"));
 app.use("/api/kanban/project",require("./router/projectRouter"))
 app.use("/api/kanban/project/user",require("./router/userRouter"))
 

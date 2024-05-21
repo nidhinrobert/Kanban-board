@@ -18,6 +18,10 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Update from "./Update";
 import DeleteModal from "./DeleteModal";
 import { useLocation } from "react-router-dom";
+import Dropdown from "./Dropdown"
+
+
+
 
 function KanbanBoard() {
   const dispatch = useDispatch();
@@ -43,11 +47,14 @@ function KanbanBoard() {
 
 
 
+
+
   useEffect(() => {
     dispatch(getTodo(projectId));
     dispatch(getInProgress(projectId));
     dispatch(getDone(projectId));
   }, [dispatch, projectId]);
+
 
 
 
@@ -120,178 +127,232 @@ function KanbanBoard() {
           </div>
         </header>
         <div className="main">
-        
-        <Sidebar />
-        <div className="kanban-board">
-          <div className="container">
-            <Droppable droppableId="todo">
-              {(provided) => (
-                <div
-                  className="column todo"
-                  data-status="todo"
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  <h2>To Do</h2>
-                  <div className="tasks" data-status="todo">
-                    {tasksArray.map((tasks, index) => (
-                      <Draggable
-                        key={tasks._id}
-                        draggableId={tasks._id.toString()}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            className="task"
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <div className="task-content">
-                              <h3>{tasks.title}</h3>
-                              <p>{tasks.description}</p>
-                              <p>
-                                Due Date:{" "}
-                                {new Date(tasks.dueDate).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div className="task-actions">
-                              <button
-                                onClick={() => toggleEditModal(tasks._id)}
-                              >
-                                <FontAwesomeIcon icon={faEdit} />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  handleDelete(tasks._id);
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                  </div>
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
 
-            <Droppable droppableId="in-progress">
-              {(provided) => (
-                <div
-                  className="column in-progress"
-                  data-status="in-progress"
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  <h2>In Progress</h2>
-                  <div className="tasks" data-status="in-progress">
-                    {inProgressArray.map((tasks, index) => (
-                      <Draggable
-                        key={tasks._id}
-                        draggableId={tasks._id.toString()}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            className="task"
-                            key={index}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <div className="task-content">
-                              <h3>{tasks.title}</h3>
-                              <p>{tasks.description}</p>
-                              <p>
-                                Due Date:{" "}
-                                {new Date(tasks.dueDate).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <div className="task-actions">
-                              <button
-                                onClick={() => toggleEditModal(tasks._id)}
-                              >
-                                <FontAwesomeIcon icon={faEdit} />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  handleDelete(tasks._id);
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                  </div>
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+          <Sidebar />
+          <div className="kanban-board">
+            <div className="container">
+              <Droppable droppableId="todo">
+                {(provided) => (
+                  <div
+                    className="column todo"
+                    data-status="todo"
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    <h2>To Do</h2>
+                    <div className="tasks" data-status="todo">
+                      {tasksArray.map((tasks, index) => (
+                        <Draggable
+                          key={tasks._id}
+                          draggableId={tasks._id.toString()}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              className="task"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <div className="task-content">
+                                <h3>{tasks.title}</h3>
+                                <p>{tasks.description}</p>
+                                <p>
+                                  Due Date:{" "}
+                                  {new Date(tasks.dueDate).toLocaleDateString()}
+                                </p>
+                                <div>
+                                  {/* ////// */}
 
-            <Droppable droppableId="done">
-              {(provided) => (
-                <div
-                  className="column done"
-                  data-status="done"
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  <h2>Done</h2>
-                  <div className="tasks" data-status="done">
-                    {doneArray.map((tasks, index) => (
-                      <Draggable
-                        key={tasks._id}
-                        draggableId={tasks._id.toString()}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            className="task"
-                            key={index}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <div className="task-content">
-                              <h3>{tasks.title}</h3>
-                              <p>{tasks.description}</p>
-                              <p>
-                                Due Date:{" "}
-                                {new Date(tasks.dueDate).toLocaleDateString()}
-                              </p>
+
+                                  <Dropdown projectId={projectId} taskId={tasks._id} />
+
+
+
+                                  {/* ///////////// */}
+                                </div>
+                              </div>
+
+                              <div className="task-actions">
+                                <button 
+                                  onClick={() => toggleEditModal(tasks._id)}
+                                  style={{
+                                    backgroundColor: '#76ade9',
+                                    border: 'none',
+                                    borderRadius:'3px',
+                                    padding: '7px',
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faEdit} />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    handleDelete(tasks._id);}}
+                                    style={{
+                                      backgroundColor: '#76ade9',
+                                      border: 'none',
+                                      borderRadius:'3px',
+                                      padding: '7px',
+                                    }}
+                                >
+
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </button>
+
+                              </div>
+
                             </div>
-                            <div className="task-actions">
-                              <button
-                                onClick={() => toggleEditModal(tasks._id)}
-                              >
-                                <FontAwesomeIcon icon={faEdit} />
-                              </button>
-                              <button
-                                onClick={() => {
-                                  handleDelete(tasks._id);
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                          )}
+                        </Draggable>
+                      ))}
+                    </div>
+                    {provided.placeholder}
                   </div>
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+                )}
+              </Droppable>
+
+              <Droppable droppableId="in-progress">
+                {(provided) => (
+                  <div
+                    className="column in-progress"
+                    data-status="in-progress"
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    <h2>In Progress</h2>
+                    <div className="tasks" data-status="in-progress">
+                      {inProgressArray.map((tasks, index) => (
+                        <Draggable
+                          key={tasks._id}
+                          draggableId={tasks._id.toString()}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              className="task"
+                              key={index}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <div className="task-content">
+                                <h3>{tasks.title}</h3>
+                                <p>{tasks.description}</p>
+                                <p>
+                                  Due Date:{" "}
+                                  {new Date(tasks.dueDate).toLocaleDateString()}
+                                </p>
+
+                                <Dropdown projectId={projectId} taskId={tasks._id} />
+
+                              </div>
+                              <div className="task-actions">
+                                <button
+                                  onClick={() => toggleEditModal(tasks._id)}
+                                  style={{
+                                    backgroundColor: '#ffcbd4',
+                                    border: 'none',
+                                    borderRadius:'3px',
+                                    padding: '7px',
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faEdit} />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    handleDelete(tasks._id);}}
+                                    style={{
+                                      backgroundColor: '#ffcbd4',
+                                      border: 'none',
+                                      borderRadius:'3px',
+                                      padding: '7px',
+                                    }}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    </div>
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+
+              <Droppable droppableId="done">
+                {(provided) => (
+                  <div
+                    className="column done"
+                    data-status="done"
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    <h2>Done</h2>
+                    <div className="tasks" data-status="done">
+                      {doneArray.map((tasks, index) => (
+                        <Draggable
+                          key={tasks._id}
+                          draggableId={tasks._id.toString()}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              className="task"
+                              key={index}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <div className="task-content">
+                                <h3>{tasks.title}</h3>
+                                <p>{tasks.description}</p>
+                                <p>
+                                  Due Date:{" "}
+                                  {new Date(tasks.dueDate).toLocaleDateString()}
+                                </p>
+
+                                <Dropdown projectId={projectId} taskId={tasks._id} />
+
+                              </div>
+                              <div className="task-actions">
+                                <button
+                                  onClick={() => toggleEditModal(tasks._id)}
+                                  style={{
+                                    backgroundColor: '#9fff9f',
+                                    border: 'none',
+                                    borderRadius:'3px',
+                                    padding: '7px',
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faEdit} />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    handleDelete(tasks._id);
+                                  }}
+                                  style={{
+                                    backgroundColor: '#9fff9f',
+                                    border: 'none',
+                                    borderRadius:'3px',
+                                    padding: '7px',
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    </div>
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
           </div>
-        </div>
         </div>
 
         {Editmodal && (

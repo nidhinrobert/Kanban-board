@@ -115,3 +115,6 @@
   padding: 6px 14px;
   border-radius: 10px;
 }
+.error {
+  color: red;
+}
